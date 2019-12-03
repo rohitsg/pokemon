@@ -1,0 +1,8 @@
+.pokemon-card-header {
+    background-color: #245740;
+    display: flex;
+}
+
+.pokemon-card-img-container {
+    border: 1px solid black;
+}
