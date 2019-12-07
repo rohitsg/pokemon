@@ -12,7 +12,6 @@ class App extends React.Component {
   async componentDidMount() {}
 
   handleInputChange = e => {
-    
     this.setState(
       {
         noOfPokemon: e.target.value,
@@ -21,6 +20,9 @@ class App extends React.Component {
       async () => {
         const { noOfPokemon } = this.state;
         if (!noOfPokemon) {
+          this.setState({
+            loading: false
+          });
           return;
         }
         const url = `https://pokeapi.co/api/v2/pokemon?limit=${noOfPokemon}`;
@@ -48,15 +50,17 @@ class App extends React.Component {
     const { pokemons, noOfPokemon, loading } = this.state;
     return (
       <React.Fragment>
+        <div className='input-holder'> 
+        Enter number of pokemon:{" "}
         <input
           value={noOfPokemon}
-          placeholder="Enter number of pokemon"
           onChange={this.handleInputChange}
           style={{
             marginBottom: "1rem"
           }}
         />
         {loading ? <h2>Loading...</h2> : null}
+        </div>
         <div className="container">
           {pokemons
             ? pokemons.map(pokemon => {
