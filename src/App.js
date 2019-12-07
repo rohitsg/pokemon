@@ -5,37 +5,67 @@ import { fetchKantoPokemon, fetchImg } from "./helpers";
 
 class App extends React.Component {
   state = {
-    pokemons: null
+    pokemons: null,
+    loading: false
   };
 
-  async componentDidMount() {
-    const url = "https://pokeapi.co/api/v2/pokemon?limit=300";
-    const response = await fetchKantoPokemon(url);
-    const pokemons = [];
-    response.forEach(pokemon => {
-      pokemons.push({
-        id: pokemon.id,
-        name: pokemon.name
-      });
-    });
-    const images = await fetchImg(pokemons);
-    pokemons.forEach((pokemon, index) => {
-      pokemon.img = images[index];
-    });
-    this.setState({
-      pokemons
-    });
-  }
+  async componentDidMount() {}
+
+  handleInputChange = e => {
+    
+    this.setState(
+      {
+        noOfPokemon: e.target.value,
+        loading: true
+      },
+      async () => {
+        const { noOfPokemon } = this.state;
+        if (!noOfPokemon) {
+          return;
+        }
+        const url = `https://pokeapi.co/api/v2/pokemon?limit=${noOfPokemon}`;
+        const response = await fetchKantoPokemon(url);
+        const pokemons = [];
+        response.forEach(pokemon => {
+          pokemons.push({
+            id: pokemon.id,
+            name: pokemon.name
+          });
+        });
+        const images = await fetchImg(pokemons);
+        pokemons.forEach((pokemon, index) => {
+          pokemon.img = images[index];
+        });
+        this.setState({
+          pokemons,
+          loading: false
+        });
+      }
+    );
+  };
 
   render() {
-    const { pokemons } = this.state;
+    const { pokemons, noOfPokemon, loading } = this.state;
     return (
-      <div className="container">
-        {pokemons ? pokemons.map(pokemon => {
-          const { name, id, img } = pokemon;
-          return  <PokemonCard name={name} id={id} img={img} key={id} />;
-        }) : null}
-      </div>
+      <React.Fragment>
+        <input
+          value={noOfPokemon}
+          placeholder="Enter number of pokemon"
+          onChange={this.handleInputChange}
+          style={{
+            marginBottom: "1rem"
+          }}
+        />
+        {loading ? <h2>Loading...</h2> : null}
+        <div className="container">
+          {pokemons
+            ? pokemons.map(pokemon => {
+                const { name, id, img } = pokemon;
+                return <PokemonCard name={name} id={id} img={img} key={id} />;
+              })
+            : null}
+        </div>
+      </React.Fragment>
     );
   }
 }
