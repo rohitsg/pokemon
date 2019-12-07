@@ -1,8 +1,15 @@
+.container-image-card {
+    margin: 1rem;
+}
+
 .pokemon-card-header {
     background-color: #245740;
     display: flex;
+    color: white;
+    padding-right: 10%;
 }
 
 .pokemon-card-img-container {
     border: 1px solid black;
+    box-shadow: 2px 5px 10px 0px;
 }
